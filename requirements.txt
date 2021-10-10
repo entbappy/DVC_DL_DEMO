@@ -1,0 +1,8 @@
+dvc
+tensorflow==2.6.0
+matplotlib
+numpy
+pandas
+tqdm
+PyYAML
+boto3  #<<<< for aws command line
