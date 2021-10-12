@@ -31,6 +31,7 @@ def get_data(config_path):
         copy_file(source_download_dir, local_data_dir)
 
 
+
 if __name__ == '__main__':
     args = argparse.ArgumentParser()
 
@@ -45,3 +46,5 @@ if __name__ == '__main__':
     except Exception as e:
         logging.exception(e)
         raise e
+
+    

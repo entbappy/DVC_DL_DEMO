@@ -32,8 +32,8 @@ def prepare_base_model(config_path, params_path):
     full_model = prepare_model(
         model,
         CLASSES=params["CLASSES"],
-        freeze_all=True,
-        freeze_till=None,
+        freeze_all=params['FREEZE_ALL_LAYERS'],
+        freeze_till=params['FREEZE_TILL'],
         learning_rate=params["LEARNING_RATE"]
     )
 
