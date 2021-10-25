@@ -1,4 +1,1 @@
-/base_model
-/callbacks
-/checkpoints
-/tensorboard_log_dir
+/model

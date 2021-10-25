@@ -7,3 +7,7 @@ tqdm
 PyYAML
 boto3  #<<<< for aws command line
 joblib
+scipy==1.7.1
+
+# local packages -
+-e .

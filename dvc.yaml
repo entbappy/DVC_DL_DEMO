@@ -1,55 +1,58 @@
 stages:
   load_data:
     cmd: python src/stage_01_load_save.py --config=config/config.yaml
-    deps:
+    deps: 
       - src/stage_01_load_save.py
       - src/utils/all_utils.py
       - config/config.yaml
     outs:
-      - data
-      - logs/running_logs.log
+      - data/cat
+      - data/dog
 
-  prepare_model:
+  prepare_base_model:
     cmd: python src/stage_02_prepare_base_model.py --config=config/config.yaml --params=params.yaml
-    deps:
+    deps: 
       - src/stage_02_prepare_base_model.py
       - src/utils/all_utils.py
       - src/utils/models.py
       - config/config.yaml
-      - logs/running_logs.log
-    params: 
+    params:
       - IMAGE_SIZE
-      - CLASSES
-      - FREEZE_ALL_LAYERS
-      - FREEZE_TILL
       - LEARNING_RATE
     outs:
-      - artifacts/base_model
+      - artifacts/base_model/updated_VGG16_base_model.h5
+      - artifacts/base_model/VGG16_base_model.h5
 
   prepare_callbacks:
-    cmd: python src/stage_03_prepare_callbacks.py --config=config/config.yaml
-    deps:
+    cmd: python src/stage_03_prepare_callbacks.py --config=config/config.yaml --params=params.yaml
+    deps: 
       - src/stage_03_prepare_callbacks.py
       - src/utils/all_utils.py
       - src/utils/callbacks.py
       - config/config.yaml
-      - logs/running_logs.log
+      - params.yaml
     outs:
-      - artifacts/callbacks
-      - artifacts/checkpoints
-      - artifacts/tensorboard_log_dir
+      - artifacts/callbacks/checkpoint_cb.cb
+      - artifacts/callbacks/tensorboard_cb.cb
 
   train:
     cmd: python src/stage_04_train.py --config=config/config.yaml --params=params.yaml
-    deps:
+    deps: 
       - src/stage_04_train.py
       - src/utils/all_utils.py
+      - src/utils/models.py
       - src/utils/callbacks.py
       - src/utils/data_management.py
       - config/config.yaml
-      - logs/running_logs.log
-      - data
-    params: 
+      - data/cat
+      - data/dog
+      - artifacts/base_model/updated_VGG16_base_model.h5
+      - artifacts/callbacks/checkpoint_cb.cb
+      - artifacts/callbacks/tensorboard_cb.cb
+    params:
       - IMAGE_SIZE
-      - AUGMENTATION
       - BATCH_SIZE
+      - EPOCHS
+      - AUGMENTATION
+    outs:
+      - artifacts/model
