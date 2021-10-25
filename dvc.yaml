@@ -1,0 +1,41 @@
+stages:
+  load_data:
+    cmd: python src/stage_01_load_save.py --config=config/config.yaml
+    deps:
+      - src/stage_01_load_save.py
+      - src/utils/all_utils.py
+      - config/config.yaml
+    outs:
+      - data
+      - logs/running_logs.log
+
+  prepare_model:
+    cmd: python src/stage_02_prepare_base_model.py --config=config/config.yaml --params=params.yaml
+    deps:
+      - src/stage_02_prepare_base_model.py
+      - src/utils/all_utils.py
+      - src/utils/models.py
+      - config/config.yaml
+      - logs/running_logs.log
+    params: 
+      - IMAGE_SIZE
+      - CLASSES
+      - FREEZE_ALL_LAYERS
+      - FREEZE_TILL
+      - LEARNING_RATE
+    outs:
+      - artifacts/base_model
+
+  prepare_callbacks:
+    cmd: python src/stage_03_prepare_callbacks.py --config=config/config.yaml
+    deps:
+      - src/stage_03_prepare_callbacks.py
+      - src/utils/all_utils.py
+      - src/utils/callbacks.py
+      - config/config.yaml
+      - logs/running_logs.log
+    outs:
+      - artifacts/callbacks
+      - artifacts/checkpoints
+      - artifacts/tensorboard_log_dir
+    

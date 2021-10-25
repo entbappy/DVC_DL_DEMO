@@ -1,0 +1,86 @@
+schema: '2.0'
+stages:
+  load_data:
+    cmd: python src/stage_01_load_save.py --config=config/config.yaml
+    deps:
+    - path: config/config.yaml
+      md5: 94fc4c606a07cef64a2c7c319ccfbec2
+      size: 499
+    - path: src/stage_01_load_save.py
+      md5: 39e9c8b7c04343d05601e46b40457317
+      size: 1731
+    - path: src/utils/all_utils.py
+      md5: 87b354479cb5aa82e12acd7749737db9
+      size: 1000
+    outs:
+    - path: data
+      md5: 63fd8c2e985a42f89fadb46034e448b8.dir
+      size: 2503750
+      nfiles: 110
+    - path: logs/running_logs.log
+      md5: 10b1f55f0e45b9c29a719efb5d0756aa
+      size: 442
+  prepare_model:
+    cmd: python src/stage_02_prepare_base_model.py --config=config/config.yaml --params=params.yaml
+    deps:
+    - path: config/config.yaml
+      md5: 94fc4c606a07cef64a2c7c319ccfbec2
+      size: 499
+    - path: logs/running_logs.log
+      md5: 2f53411ca8475e706f2fafddb2bd5893
+      size: 4649
+    - path: src/stage_02_prepare_base_model.py
+      md5: 692f809659867770654ddd4fe269231b
+      size: 2333
+    - path: src/utils/all_utils.py
+      md5: 87b354479cb5aa82e12acd7749737db9
+      size: 1000
+    - path: src/utils/models.py
+      md5: 80cabfd3b364410512df7a933f2808ab
+      size: 1486
+    params:
+      params.yaml:
+        CLASSES: 2
+        FREEZE_ALL_LAYERS: true
+        FREEZE_TILL: None
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+        LEARNING_RATE: 0.001
+    outs:
+    - path: artifacts/base_model
+      md5: de140e63826d51dac2383380a688889d.dir
+      size: 118052280
+      nfiles: 2
+  prepare_callbacks:
+    cmd: python src/stage_03_prepare_callbacks.py --config=config/config.yaml
+    deps:
+    - path: config/config.yaml
+      md5: 94fc4c606a07cef64a2c7c319ccfbec2
+      size: 499
+    - path: logs/running_logs.log
+      md5: 099c08da9335cdb1616edc8a5f4fac7e
+      size: 5487
+    - path: src/stage_03_prepare_callbacks.py
+      md5: 61a3acedeeaf8d15045b56a0be4cd627
+      size: 1654
+    - path: src/utils/all_utils.py
+      md5: 87b354479cb5aa82e12acd7749737db9
+      size: 1000
+    - path: src/utils/callbacks.py
+      md5: 47f9289a47896bc1e89dfce6edcee9d6
+      size: 1530
+    outs:
+    - path: artifacts/callbacks
+      md5: 5b79991eaa74dabca21dffbd5ace8cab.dir
+      size: 1552
+      nfiles: 2
+    - path: artifacts/checkpoints
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
+    - path: artifacts/tensorboard_log_dir
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
