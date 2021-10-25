@@ -27,8 +27,8 @@ stages:
       md5: 94fc4c606a07cef64a2c7c319ccfbec2
       size: 499
     - path: logs/running_logs.log
-      md5: 2f53411ca8475e706f2fafddb2bd5893
-      size: 4649
+      md5: e8460b23122a15988665293b8d8418f3
+      size: 6347
     - path: src/stage_02_prepare_base_model.py
       md5: 692f809659867770654ddd4fe269231b
       size: 2333
@@ -36,8 +36,8 @@ stages:
       md5: 87b354479cb5aa82e12acd7749737db9
       size: 1000
     - path: src/utils/models.py
-      md5: 80cabfd3b364410512df7a933f2808ab
-      size: 1486
+      md5: 6d7bc92c6433fd2514de7a09bff168a8
+      size: 1704
     params:
       params.yaml:
         CLASSES: 2
@@ -50,7 +50,7 @@ stages:
         LEARNING_RATE: 0.001
     outs:
     - path: artifacts/base_model
-      md5: de140e63826d51dac2383380a688889d.dir
+      md5: 753a78bd26f443925c8ab195b1efc625.dir
       size: 118052280
       nfiles: 2
   prepare_callbacks:
@@ -60,8 +60,8 @@ stages:
       md5: 94fc4c606a07cef64a2c7c319ccfbec2
       size: 499
     - path: logs/running_logs.log
-      md5: 099c08da9335cdb1616edc8a5f4fac7e
-      size: 5487
+      md5: e1656a422577484e76dafa3baf9dbf06
+      size: 1280
     - path: src/stage_03_prepare_callbacks.py
       md5: 61a3acedeeaf8d15045b56a0be4cd627
       size: 1654
@@ -73,7 +73,7 @@ stages:
       size: 1530
     outs:
     - path: artifacts/callbacks
-      md5: 5b79991eaa74dabca21dffbd5ace8cab.dir
+      md5: 920f35c2cda138c3ce4fb05bf95460db.dir
       size: 1552
       nfiles: 2
     - path: artifacts/checkpoints
@@ -84,3 +84,36 @@ stages:
       md5: d751713988987e9331980363e24189ce.dir
       size: 0
       nfiles: 0
+  train:
+    cmd: python src/stage_04_train.py --config=config/config.yaml --params=params.yaml
+    deps:
+    - path: config/config.yaml
+      md5: 94fc4c606a07cef64a2c7c319ccfbec2
+      size: 499
+    - path: data
+      md5: 63fd8c2e985a42f89fadb46034e448b8.dir
+      size: 2503750
+      nfiles: 110
+    - path: logs/running_logs.log
+      md5: 69bf08ee62b8b0bcc9dc176301721b86
+      size: 2140
+    - path: src/stage_04_train.py
+      md5: db533779a606a633cdb409bae7a28580
+      size: 2027
+    - path: src/utils/all_utils.py
+      md5: 87b354479cb5aa82e12acd7749737db9
+      size: 1000
+    - path: src/utils/callbacks.py
+      md5: 47f9289a47896bc1e89dfce6edcee9d6
+      size: 1530
+    - path: src/utils/data_management.py
+      md5: de2dc7f006b645cfdcd30e58689f4926
+      size: 1443
+    params:
+      params.yaml:
+        AUGMENTATION: true
+        BATCH_SIZE: 16
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3

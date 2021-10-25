@@ -38,4 +38,18 @@ stages:
       - artifacts/callbacks
       - artifacts/checkpoints
       - artifacts/tensorboard_log_dir
-    
+
+  train:
+    cmd: python src/stage_04_train.py --config=config/config.yaml --params=params.yaml
+    deps:
+      - src/stage_04_train.py
+      - src/utils/all_utils.py
+      - src/utils/callbacks.py
+      - src/utils/data_management.py
+      - config/config.yaml
+      - logs/running_logs.log
+      - data
+    params: 
+      - IMAGE_SIZE
+      - AUGMENTATION
+      - BATCH_SIZE
