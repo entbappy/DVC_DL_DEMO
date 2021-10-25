@@ -23,5 +23,6 @@ setup(
         "tqdm",
         "PyYAML",
         "boto3" ,
+        "joblib"
     ]
 )
