@@ -1,20 +1,21 @@
-
 artifacts:
   ARTIFACTS_DIR: artifacts
-  TRAINED_MODEL_DIR: model
+  BASE_LOG_DIR: base_model_dir
   BASE_MODEL_DIR: base_model
   BASE_MODEL_NAME: VGG16_base_model.h5
-  UPDATED_BASE_MODEL_NAME: updated_VGG16_base_model.h5
-  CHECKPOINT_DIR: checkpoints
-  BASE_LOG_DIR: base_model_dir
-  TENSORBOARD_ROOT_LOG_DIR: tensorboard_log_dir
   CALLBACKS_DIR: callbacks
+  CHECKPOINT_DIR: checkpoints
   DATA_DIR: data
-
-source_download_dirs:
-  - ../outside_data/data/train/dog
-  - ../outside_data/data/train/cat
-
+  PERFORMANCE_GRAPH: performance_graph_dir
+  SAVE_EVALUATION_DIR: test_report
+  TENSORBOARD_ROOT_LOG_DIR: tensorboard_log_dir
+  TRAINED_MODEL_DIR: model
+  UPDATED_BASE_MODEL_NAME: updated_VGG16_base_model.h5
 local_data_dirs:
-  - data/dog
-  - data/cat
+- data/dog
+- data/cat
+new_save_model_path:
+  SAVE_MODEL_DIR: artifacts\model\model_at_Thu_Oct_28_02_25_50_2021_.h5
+source_download_dirs:
+- ../outside_data/data/train/dog
+- ../outside_data/data/train/cat

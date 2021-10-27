@@ -2,9 +2,12 @@ from src.utils.all_utils import read_yaml, create_directory
 from src.utils.models import load_full_model, get_unique_path_to_save_model
 from src.utils.callbacks import get_callbacks
 from src.utils.data_management import train_valid_generator
+import matplotlib.pyplot as plt
 import argparse
 import os
 import logging
+import yaml
+import pandas as pd
 
 logging_str = "[%(asctime)s: %(levelname)s: %(module)s]: %(message)s"
 log_dir = "logs"
@@ -20,8 +23,9 @@ def train_model(config_path, params_path):
     artifacts_dir = artifacts["ARTIFACTS_DIR"]
 
     train_model_dir_path = os.path.join(artifacts_dir, artifacts["TRAINED_MODEL_DIR"])
+    performance_graph_dir = os.path.join(artifacts_dir, artifacts["PERFORMANCE_GRAPH"])
 
-    create_directory([train_model_dir_path])
+    create_directory([train_model_dir_path, performance_graph_dir])
 
     untrained_full_model_path = os.path.join(artifacts_dir, artifacts["BASE_MODEL_DIR"], artifacts["UPDATED_BASE_MODEL_NAME"])
 
@@ -40,7 +44,7 @@ def train_model(config_path, params_path):
     steps_per_epoch = train_generator.samples // train_generator.batch_size
     validation_steps = valid_generator.samples // valid_generator.batch_size
 
-    model.fit(
+    history = model.fit(
         train_generator,
         validation_data=valid_generator,
         epochs=params["EPOCHS"], 
@@ -48,12 +52,41 @@ def train_model(config_path, params_path):
         validation_steps=validation_steps,
         callbacks=callbacks
     )
+
+    print(history.history.keys())
+    # summarize history for accuracy
+    plt.plot(history.history['accuracy'])
+    plt.plot(history.history['val_accuracy'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.savefig(f"{performance_graph_dir}{'/accuracy.png'}")
+    # summarize history for loss
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.savefig(f"{performance_graph_dir}{'/loss.png'}")
+
+
     logging.info(f"training completed")
 
     trained_model_dir = os.path.join(artifacts_dir, artifacts["TRAINED_MODEL_DIR"])
     create_directory([trained_model_dir])
 
+    with open(config_path) as yaml_file:
+        content = yaml.safe_load(yaml_file)
+
     model_file_path = get_unique_path_to_save_model(trained_model_dir)
+    
+    content['new_save_model_path']['SAVE_MODEL_DIR'] = model_file_path
+
+    with open(config_path, 'w') as f:
+        yaml.dump(content, f)
+
     model.save(model_file_path)
     logging.info(f"trained model is saved at: {model_file_path}")
 

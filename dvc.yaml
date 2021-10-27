@@ -56,3 +56,22 @@ stages:
       - AUGMENTATION
     outs:
       - artifacts/model
+      - artifacts/performance_graph_dir/accuracy.png
+      - artifacts/performance_graph_dir/loss.png
+
+  evaluate:
+    cmd: python src/stage_05_evaluate.py --config=config/config.yaml --params=params.yaml
+    deps: 
+      - src/stage_05_evaluate.py
+      - src/utils/all_utils.py
+      - src/utils/data_management.py
+      - config/config.yaml
+      - data/cat
+      - data/dog
+      - artifacts/model
+    params:
+      - IMAGE_SIZE
+      - BATCH_SIZE
+      - AUGMENTATION
+    outs:
+      - artifacts/test_report/reports.json
